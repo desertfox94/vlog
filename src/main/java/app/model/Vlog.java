@@ -1,4 +1,4 @@
-package app;
+package app.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.google.gson.JsonSyntaxException;
 
+import app.common.FileUtil;
+import app.core.Persitence;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

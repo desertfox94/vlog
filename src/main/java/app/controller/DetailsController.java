@@ -1,4 +1,4 @@
-package app;
+package app.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +7,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
+import app.core.LocaleDateConverter;
+import app.model.VlogEntry;
+import app.model.VlogFile;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;

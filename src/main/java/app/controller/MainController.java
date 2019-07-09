@@ -1,5 +1,8 @@
-package app;
+package app.controller;
 
+import app.Application;
+import app.model.Vlog;
+import app.model.VlogEntry;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
