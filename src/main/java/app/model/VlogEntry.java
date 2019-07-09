@@ -69,4 +69,9 @@ public class VlogEntry {
 		}
 	}
 
+	public void delete(VlogFile file) {
+		filesProperty.remove(file);
+		file.delete();
+	}
+
 }

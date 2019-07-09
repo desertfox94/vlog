@@ -22,7 +22,7 @@ public class Application extends javafx.application.Application {
 			controller = show(getClass().getResource("Main.fxml"));
 			primaryStage.setTitle("Vlog");
 			//			primaryStage.getIcons().add(App.icon());
-			Scene scene = new Scene(controller.getRoot(), 800, 490);
+			Scene scene = new Scene(controller.getRoot(), 800, 550);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {

@@ -13,7 +13,9 @@ import app.model.VlogFile;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -24,6 +26,10 @@ import javafx.scene.media.MediaView;
 import javafx.stage.FileChooser;
 
 public class DetailsController extends Controller {
+
+	private static final int DEFAULT_WIDTH = 365;
+
+	private static final int DEFAULT_HEIGHT = 200;
 
 	@FXML
 	TextField name;
@@ -78,21 +84,28 @@ public class DetailsController extends Controller {
 		fileSizeColumn.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getFile().length())));
 		fileCommentColumn.setCellValueFactory(cell -> null);
 
+		filesTableView.setContextMenu(createContextMenu());
+
 		filesTableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
-			Media media = null;
-			if (n != null) {
-				media = new Media(n.getFile().toURI().toString());
+			if (n == null) {
+				return;
 			}
-			MediaPlayer mediaPlayer = new MediaPlayer(media);
+			Media media = new Media(n.getFile().toURI().toString());
+			final MediaPlayer mediaPlayer = new MediaPlayer(media);
 			mediaView.setMediaPlayer(mediaPlayer);
+			mediaPlayer.setAutoPlay(true);
+			System.out.println();
 		});
 	}
 
 	public void showEntry(VlogEntry vlogEntry) {
-		if (vlogEntry != null && this.vlogEntry != null) {
+		if (this.vlogEntry != null) {
 			reset();
 		}
 		this.vlogEntry = vlogEntry;
+		if (this.vlogEntry == null) {
+			return;
+		}
 		filesTableView.setItems(vlogEntry.filesProperty());
 		name.textProperty().bindBidirectional(vlogEntry.name());
 		datePicker.valueProperty().addListener(dateChangeListener);
@@ -102,16 +115,23 @@ public class DetailsController extends Controller {
 			datePicker.valueProperty().set(dateConverter.fromString(vlogEntry.date().get()));
 		}
 		description.textProperty().bindBidirectional(vlogEntry.description());
+	}
 
-		//		mediaView.setMediaPlayer(new MediaPlayer(new Media(vlogEntry.path().get())));
-
+	private ContextMenu createContextMenu() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item = new MenuItem("Entfernen");
+		item.setOnAction(e -> vlogEntry.delete(filesTableView.getSelectionModel().getSelectedItem()));
+		contextMenu.getItems().add(item);
+		return contextMenu;
 	}
 
 	private void reset() {
 		name.textProperty().unbindBidirectional(vlogEntry.name());
+		name.textProperty().set(null);
 		datePicker.valueProperty().removeListener(dateChangeListener);
 		datePicker.setValue(null);
 		description.textProperty().unbindBidirectional(vlogEntry.description());
+		description.textProperty().set(null);
 	}
 
 	@FXML
@@ -119,6 +139,12 @@ public class DetailsController extends Controller {
 		FileChooser fileChooser = new FileChooser();
 		List<File> files = fileChooser.showOpenMultipleDialog(null);
 		files.forEach(vlogEntry::addFile);
+	}
+
+	@FXML
+	public void rotate() {
+		double rotation = mediaView.rotateProperty().get();
+		mediaView.rotateProperty().set(rotation == 0 ? 90.0 : 0);
 	}
 
 }

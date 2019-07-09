@@ -48,4 +48,8 @@ public class VlogFile {
 		return file;
 	}
 
+	public boolean delete() {
+		return file.delete();
+	}
+
 }

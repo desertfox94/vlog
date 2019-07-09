@@ -72,4 +72,9 @@ public class Vlog {
 		return new File(files, name);
 	}
 
+	public void delete(VlogEntry selectedItem) {
+		selectedItem.filesProperty().forEach(fielEntry -> fielEntry.getFile().delete());
+		entriesProperty.remove(selectedItem);
+	}
+
 }

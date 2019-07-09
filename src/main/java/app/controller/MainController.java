@@ -4,6 +4,8 @@ import app.Application;
 import app.model.Vlog;
 import app.model.VlogEntry;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
@@ -42,6 +44,7 @@ public class MainController extends Controller {
 		dateColumn.setCellValueFactory(cell -> cell.getValue().date());
 		nameColumn.setCellValueFactory(cell -> cell.getValue().name());
 		tableView.setItems(vlog.entriesProperty());
+		tableView.setContextMenu(createContextMenu());
 		tableView.getSelectionModel().selectedItemProperty().addListener((p, o, n) -> {
 			showEntryDetails(n);
 		});
@@ -49,10 +52,18 @@ public class MainController extends Controller {
 
 	public void showEntryDetails(VlogEntry vlogEntry) {
 		if (detailsController == null) {
-			detailsController = (DetailsController)Application.show(getClass().getResource("EntryDetails.fxml"));
+			detailsController = (DetailsController)Application.show(getClass().getResource("../EntryDetails.fxml"));
 			detailsStage.add(detailsController.getRoot(), 0, 0);
 		}
 		detailsController.showEntry(vlogEntry);
+	}
+
+	private ContextMenu createContextMenu() {
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem item = new MenuItem("Löschen");
+		item.setOnAction(e -> vlog.delete(tableView.getSelectionModel().getSelectedItem()));
+		contextMenu.getItems().add(item);
+		return contextMenu;
 	}
 
 	public void save() {
